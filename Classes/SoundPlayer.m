@@ -72,10 +72,10 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState) {
 	[self createToneUnit];
 	// Stop changing parameters on the unit
 	OSErr err = AudioUnitInitialize(toneUnit);
-	NSAssert1(err == noErr, @"Error initializing unit: %ld", err);
+    NSAssert1(err == noErr, @"Error initializing unit: %hd", err);
 	// Start playback
 	err = AudioOutputUnitStart(toneUnit);
-	NSAssert1(err == noErr, @"Error starting unit: %ld", err);
+    NSAssert1(err == noErr, @"Error starting unit: %hd", err);
 }
 
 -(BOOL) isPlaying {
@@ -97,13 +97,13 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState) {
 	NSAssert(defaultOutput, @"Can't find default output");
 	
 	OSErr err = AudioComponentInstanceNew(defaultOutput, &toneUnit);
-	NSAssert1(toneUnit, @"Error creating unit: %ld", err);
+    NSAssert1(toneUnit, @"Error creating unit: %hd", err);
 	
 	AURenderCallbackStruct input;
 	input.inputProc = RenderTone;
 	input.inputProcRefCon = self;
 	err = AudioUnitSetProperty(toneUnit, kAudioUnitProperty_SetRenderCallback, kAudioUnitScope_Input, 0, &input, sizeof(input));
-	NSAssert1(err == noErr, @"Error setting callback: %ld", err);
+    NSAssert1(err == noErr, @"Error setting callback: %hd", err);
 	
 	const int four_bytes_per_float = 4;
 	const int eight_bits_per_byte = 8;
@@ -118,7 +118,7 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState) {
 	streamFormat.mChannelsPerFrame = 1;	
 	streamFormat.mBitsPerChannel = four_bytes_per_float * eight_bits_per_byte;
 	err = AudioUnitSetProperty (toneUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &streamFormat, sizeof(AudioStreamBasicDescription));
-	NSAssert1(err == noErr, @"Error setting stream format: %ld", err);
+    NSAssert1(err == noErr, @"Error setting stream format: %hd", err);
 }
 
 - (void) dealloc {

@@ -38,7 +38,7 @@
 
 -(IBAction) segmentedControlValueChanged:(id)sender {
 	NSInteger index = [sender selectedSegment];
-	NSLog(@"selection index %d", index);
+    NSLog(@"selection index %ld", (long)index);
 	selectedSound = [[soundPlayer allSounds] objectAtIndex: index];
 	NSLog(@"selectedSound changed %@", selectedSound);
 	soundPlayer.selectedSound = selectedSound;
