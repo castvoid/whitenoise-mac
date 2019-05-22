@@ -4,14 +4,19 @@
 #import "BrownSound.h"
 #import <AudioToolbox/AudioToolbox.h>
 
-@interface SoundPlayer ()
-- (void)createToneUnit;
+@interface SoundPlayer () {
+    AudioComponentInstance toneUnit;
+    Float64 sampleRate;
+    NSMutableArray *sounds;
+    BOOL playing;
+}
+
+- (void) fillBuffer: (Float32*) buffer
+    withFrameNumber: (UInt32) frameNumber;
+
 @end
 
 @implementation SoundPlayer
-
-@synthesize selectedAmplitude, selectedSound;
-@dynamic playing;
 
 OSStatus RenderTone(void *inRefCon, AudioUnitRenderActionFlags 	*ioActionFlags, const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, UInt32 inNumberFrames, AudioBufferList *ioData) {
 	SoundPlayer *soundPlayer = (SoundPlayer *)inRefCon;
@@ -22,15 +27,14 @@ OSStatus RenderTone(void *inRefCon, AudioUnitRenderActionFlags 	*ioActionFlags, 
 }
 
 void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState) {
-	NSLog(@"ToneInterruptionListener");
 	SoundPlayer *soundPlayer = (SoundPlayer *)inClientData;
 	[soundPlayer stop];
 }
 
 - (id) init {
 	[super init];
-	selectedAmplitude = 0.25;
-	selectedSound = [[self allSounds] objectAtIndex: 0];
+	_selectedAmplitude = 0.25;
+	_selectedSound = [[self allSounds] objectAtIndex: 0];
 	sampleRate = 0;
 	return self;
 }
@@ -48,17 +52,13 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState) {
   UInt32 frame;
 	Float32 nextFloat;
   for (frame = 0; frame < frameNumber; ++frame) {
-		nextFloat = selectedSound.nextFloat;		
-    buffer[frame] = nextFloat * selectedAmplitude;
+		nextFloat = _selectedSound.nextFloat;
+    buffer[frame] = nextFloat * _selectedAmplitude;
   }	
 }
 
-- (void)stop
-{
-	NSLog(@"stop");
-	
+- (void)stop{
 	if (toneUnit) {
-		NSLog(@"tone unit stopping");
 		AudioOutputUnitStop(toneUnit);
 		AudioUnitUninitialize(toneUnit);
 		AudioComponentInstanceDispose(toneUnit);
@@ -67,8 +67,6 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState) {
 }
 
 - (void)start {
-	NSLog(@"start");
-	
 	[self createToneUnit];
 	// Stop changing parameters on the unit
 	OSErr err = AudioUnitInitialize(toneUnit);
@@ -78,11 +76,8 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState) {
     NSAssert1(err == noErr, @"Error starting unit: %hd", err);
 }
 
--(BOOL) isPlaying {
-	if (toneUnit)
-		return YES;
-	else
-		return NO;
+-(BOOL)isPlaying {
+    return toneUnit != NULL;
 }
 
 - (void)createToneUnit {	
@@ -119,12 +114,6 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState) {
 	streamFormat.mBitsPerChannel = four_bytes_per_float * eight_bits_per_byte;
 	err = AudioUnitSetProperty (toneUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &streamFormat, sizeof(AudioStreamBasicDescription));
     NSAssert1(err == noErr, @"Error setting stream format: %hd", err);
-}
-
-- (void) dealloc {
-	[selectedSound release];
-	[sounds release];
-	[super dealloc];
 }
 
 

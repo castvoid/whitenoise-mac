@@ -1,10 +1,15 @@
 #import "PinkSound.h"
 #import "WhiteSound.h"
 
+@interface PinkSound (){
+    Float32 white, pink, b0, b1, b2, b3, b4, b5, b6;
+}
+
+@end
+
 @implementation PinkSound
 
-- init
-{
+- (instancetype)init {
 	[super init];
 	
 	b0 = 0;
@@ -17,11 +22,11 @@
 	return self;
 }
 
-- (NSString*) name {
+- (NSString*)name {
 	return @"Pink";
 }
 
-- (Float32) nextFloat {
+- (Float32)nextFloat {
 	white = (Float32) rand()/RAND_MAX - .5f;
 	b0 = 0.99886f * b0 + white * 0.0555179f;
 	b1 = 0.99332f * b1 + white * 0.0750759f;

@@ -1,8 +1,6 @@
 #import <Foundation/Foundation.h>
 #import "Sound.h"
 
-@interface WhiteSound : Sound {
-
-}
+@interface WhiteSound : Sound
 
 @end

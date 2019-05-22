@@ -1,32 +1,36 @@
 #import "BrownSound.h"
 
+@interface BrownSound () {
+    Float32 _brown;
+}
+
+@end
+
 
 @implementation BrownSound
 
-- init
-{
+- (instancetype)init {
 	[super init];
-	
-	r = 0;
-	m_brown = 0;
+
+	_brown = 0;
 	return self;
 }
 
-- (NSString *) name {
+- (NSString *)name {
 	return @"Brown";
 }
 
-- (Float32) nextFloat {
+- (Float32)nextFloat {
 	while (true) {
-		r = (Float32) rand()/RAND_MAX - .5f;
-		m_brown += r;
-		if (m_brown < -8.0f || m_brown > 8.0f) {
-			m_brown -= r;
+		Float32 r = (Float32) rand()/RAND_MAX - .5f;
+		_brown += r;
+		if (_brown < -8.0f || _brown > 8.0f) {
+			_brown -= r;
 		} else {
 			break;
 		}
 	}
-	return m_brown * 0.0625f * 2.2;
+	return _brown * 0.0625f * 2.2;
 }
 
 @end

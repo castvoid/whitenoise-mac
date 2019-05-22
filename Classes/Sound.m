@@ -2,10 +2,8 @@
 
 @implementation Sound
 
-@dynamic nextFloat, name;
-
 - (NSString *) name {
-	return @"";
+	return @"<Sound>";
 }
 
 - (Float32) nextFloat {
