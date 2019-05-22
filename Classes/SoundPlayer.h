@@ -1,11 +1,3 @@
-//
-//  SoundPlayer.h
-//  WhiteNoise
-//
-//  Created by Frederik Dietz on 1/15/11.
-//  Copyright 2011 XING AG. All rights reserved.
-//
-
 #import "Sound.h"
 #import <AudioUnit/AudioUnit.h>
 

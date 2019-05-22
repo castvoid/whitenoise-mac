@@ -1,11 +1,3 @@
-//
-//  PinkSound.m
-//  WhiteNoise
-//
-//  Created by Frederik Dietz on 1/11/11.
-//  Copyright 2011 XING AG. All rights reserved.
-//
-
 #import "PinkSound.h"
 #import "WhiteSound.h"
 
